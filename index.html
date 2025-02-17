@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stop Watch Timer</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+
+
+  <!-- style here -->
+  <style type="text/css" media="all">
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    @font-face {
+      font-family: digital-7;
+      src: url(digital-7.ttf);
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: #0D0E21;
+    }
+
+    .main {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .main div {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 40px auto;
+      color: white;
+    }
+
+    .displays {
+      border-radius: 8.09px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 250px;
+      height: 60px;
+      font-family: digital-7, sans-serif;
+      background: rgba(255, 255, 255, .18);
+    }
+
+    .displays div {
+      width: calc(220px / 3);
+      font-size: 3em;
+      letter-spacing: .4px;
+    }
+
+    .buttons button {
+      Margin: auto 7px;
+      padding: 6px 23px;
+      border-radius: 7px;
+      border: none;
+      outline: none;
+      letter-spacing: .4px;
+      font-size: 1.01em;
+      background: rgba(255, 255, 255, .18);
+      color: white;
+    }
+
+    .night {
+      position: absolute;
+      top: 2%;
+      right: 5%;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #3B3B3B33;
+
+    }
+
+    span {
+      position: absolute;
+    }
+    #randomClr{
+      position: absolute;
+      width: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      color: white;
+      top: 20px;
+      left: 20px;
+      height: 30px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="randomClr">
+    <span class="material-symbols-outlined">
+  palette
+</span>
+  </div>
+  <div class="night day" id="frame">
+    <span class="material-symbols-outlined" style="color: white;filter: blur(4px);">
+      dark_mode
+    </span>
+    <span class="material-symbols-outlined" style="color: white;">
+      dark_mode
+    </span>
+  </div>
+  <div class="main">
+    <div class="displays" id="display">
+      <div id="hours" class="same">00</div>
+      <div id="minutes" class="same">00</div>
+      <div id="seconds" class="same">00</div>
+    </div>
+    <div class="buttons">
+      <button id="start" type="submit" class="btn">Start</button>
+      <button id="pause" type="submit" class="btn">Pause</button>
+      <button id="reset" type="submit" class="btn">Reset</button>
+    </div>
+  </div>
+
+
+  <!-- scripting language -->
+  <script>
+    //buttons
+    const start = document.getElementById('start');
+    const pause = document.getElementById('pause');
+    const reset = document.getElementById('reset');
+
+    //displays
+    const hours = document.getElementById('hours');
+    const minutes = document.getElementById('minutes');
+    const seconds = document.getElementById('seconds');
+
+    let interval = null;
+    let count = 0;
+    let mCount = 0;
+    let hCount = 0;
+    start.addEventListener('click', () => {
+      if (interval === null) {
+        interval = setInterval(() => {
+          count++;
+          if (count < 10) {
+            seconds.innerText = "0" + count;
+          } else {
+            seconds.innerText = parseInt(count);
+          }
+          if (count === 60) {
+            count = 0;
+            seconds.innerText = "00";
+            mCount++;
+            if (mCount < 10) {
+              minutes.innerText = "0" + mCount;
+            } else {
+              minutes.innerText = parseInt(mCount);
+            }
+            if (mCount === 60) {
+              mCount = 0;
+              minutes.innerText = "00";
+              hCount++
+              if (hCount < 10) {
+                hours.innerText = "0" + hCount;
+              } else {
+                hours.innerText = parseInt(hCount);
+              }
+            }
+          }
+        }, 1000)
+      }
+    })
+
+    pause.addEventListener('click', () => {
+      clearInterval(interval);
+      interval = null;
+    });
+
+    reset.addEventListener('click', () => {
+      clearInterval(interval);
+      interval = null;
+      count = 0;
+      mCount = 0;
+      hCount = 0;
+      seconds.innerText = "00";
+      minutes.innerText = "00";
+      hours.innerText = "00";
+    })
+    let body = document.body;
+    let display = document.querySelector(".displays");
+    let same = document.querySelectorAll(".same");
+    const frame = document.getElementById('frame');
+    let buttons = document.querySelectorAll(".btn");
+    let isDarkMode = true;
+    frame.addEventListener('click', () => {
+      
+      isDarkMode = !isDarkMode;
+      if (isDarkMode) {
+        display.style.background = "rgba(255,255,255,0.18)"
+        frame.innerHTML = `<span class="material-symbols-outlined" style="color: white;">
+      dark_mode
+    </span>    <span class="material-symbols-outlined" style="color: white;filter: blur(4px);">
+      dark_mode
+    </span>
+    `;
+        body.style.background = "#0D0E21";
+        same.forEach(each => {
+          each.style.color = 'white';
+        });
+        buttons.forEach(btn =>{
+          btn.style.backgroundColor = "rgba(255,255,255,0.18)";
+          btn.style.color = "white";
+          randomClr.style.color = "white";
+          randomClr.style.background = "transparent";
+        })
+      } else {
+        randomClr.style.color = "black";
+        randomClr.style.background = "transparent";
+        display.style.background = "rgba(0,0,0,0.18)";
+        frame.innerHTML = `<span class="material-symbols-outlined" style="color:#FFEFB8;">light_mode
+</span><span class="material-symbols-outlined" style="color:#FFEFB8;filter:blur(4px);">light_mode
+</span>`;
+        body.style.background = "#CACACE";
+        same.forEach(each => {
+          each.style.color = 'black';
+        })
+        buttons.forEach(btn =>{
+          btn.style.backgroundColor = "rgba(0,0,0,0.12)";
+btn.style.color = "black";
+        })
+
+      }
+    })
+    
+    
+    let randomClr = document.getElementById("randomClr");
+    randomClr.addEventListener("click",() =>{
+      let random = `rgb(${Math.floor(Math.random() * 256)},${Math.floor(Math.random() * 256)},${Math.floor(Math.random() * 256)})`;
+      hours.style.color = random;
+      minutes.style.color = random;
+      seconds.style.color = random;
+      randomClr.style.background = random;
+    })
+  </script>
+</body>
+
+</html>
